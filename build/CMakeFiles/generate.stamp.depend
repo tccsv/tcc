@@ -1,0 +1,28 @@
+# CMake generation dependency list for this directory.
+D:/Program Files/CMake/share/cmake-3.31/Modules/CMakeCInformation.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/CMakeCommonLanguageInclude.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/CMakeGenericSystem.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/CMakeInitializeConfigs.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/CMakeLanguageInformation.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/CMakeRCInformation.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/CMakeSystemSpecificInformation.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/CMakeSystemSpecificInitialize.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/Compiler/CMakeCommonCompilerMacros.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/Compiler/MSVC-C.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/Compiler/MSVC.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/FindOpenGL.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/FindPackageHandleStandardArgs.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/FindPackageMessage.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CMakeCLinkerInformation.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CMakeCommonLinkerInformation.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/Platform/Linker/Windows-MSVC-C.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/Platform/Linker/Windows-MSVC.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/Platform/Windows-Initialize.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/Platform/Windows-MSVC-C.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/Platform/Windows-MSVC.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/Platform/Windows.cmake
+D:/Program Files/CMake/share/cmake-3.31/Modules/Platform/WindowsPaths.cmake
+D:/Study/3sem_m/pams/app/tcc2/CMakeLists.txt
+D:/Study/3sem_m/pams/app/tcc2/build/CMakeFiles/3.31.4/CMakeCCompiler.cmake
+D:/Study/3sem_m/pams/app/tcc2/build/CMakeFiles/3.31.4/CMakeRCCompiler.cmake
+D:/Study/3sem_m/pams/app/tcc2/build/CMakeFiles/3.31.4/CMakeSystem.cmake

@@ -7,9 +7,9 @@ extern "C"
 #endif
 
 // Режим обработки в одиночном режиме
-// #define TCC_SINGLE_MODE
+ #define TCC_SINGLE_MODE
 // Режим обработки в параллельном режиме
- #define TCC_PARALLEL_MODE
+//	#define TCC_PARALLEL_MODE
 
 #define TCC_MIN_MONEYS_PER_THREAD 10000u
 

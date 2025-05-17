@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\Study\3sem_m\pams\app\tcc2\TCC\core\TCC_money.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Study\3sem_m\pams\app\tcc2\TCC\core\TCC_STS.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Study\3sem_m\pams\app\tcc2\TCC\infra\TCC_money_load.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Study\3sem_m\pams\app\tcc2\main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Study\3sem_m\pams\app\tcc2\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{81B20C5E-16F4-39D2-B5D5-286D10E9F585}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

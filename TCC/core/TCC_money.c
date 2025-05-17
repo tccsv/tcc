@@ -1,8 +1,8 @@
-#include <TCC/TCC_money.h>
-#include <TCC/TCC_thr_config.h>
-// #include <TCC/utils/TCC_cpuInfo.h>
-#include <threads.h>
+#include "TCC/TCC_money.h"
+#include "TCC/TCC_thr_config.h"
+#include <pthread.h>
 #include <stdlib.h>
+
 
 
 typedef struct TCC_MoneyNotes
@@ -43,8 +43,8 @@ void TCC_moneyNotesDel(TCC_MoneyNotes** moneyNoterPP)
     free(*moneyNoterPP);
 }
 
-void TCC_moneyNotesInsert(TCC_MoneyNotes* moneyNotesP, const TCC_Money money, 
-    const TCC_Date date)
+TCC_Error TCC_moneyNotesInsert(TCC_MoneyNotes *moneyNotesP, const TCC_Money money,
+                               const TCC_Date date)
 {
     ++moneyNotesP->length;
     moneyNotesP->dateArr[moneyNotesP->length-1] = date;
@@ -87,6 +87,7 @@ static TCC_Money TCC_moneyRangeSum_s(const TCC_MoneyNotes * notesPtr,
     return res;
 }
 
+// Измените функции, использующие threads.h на аналоги pthread
 static int TCC_moneyRangeSum_p_step(void* data)
 {    
     TCC_MoneyNotesStep_p* notesStepPtr = (TCC_MoneyNotesStep_p*) data;
@@ -98,12 +99,13 @@ static int TCC_moneyRangeSum_p_step(void* data)
     return 0;
 }
 
+// Замените thrd_t на pthread_t
 static void TCC_moneyRangeSum_p_init(const TCC_MoneyNotes * notesPtr, 
                                     const size_t startIndex, const size_t endIndex,
-                                    thrd_t** threads, TCC_MoneyNotesStep_p** threadsData,
+                                    pthread_t** threads, TCC_MoneyNotesStep_p** threadsData,
                                     const int numThreads)
 {
-    *threads = (thrd_t*) malloc(numThreads*sizeof(thrd_t));
+    *threads = (pthread_t*) malloc(numThreads*sizeof(pthread_t));
     *threadsData = (TCC_MoneyNotesStep_p*) malloc(numThreads*sizeof(TCC_MoneyNotesStep_p));
     const size_t indicesPerThread = (endIndex - startIndex) / numThreads;    
     for(size_t i = 0; i < numThreads-1; ++i)
@@ -117,16 +119,16 @@ static void TCC_moneyRangeSum_p_init(const TCC_MoneyNotes * notesPtr,
     (*threadsData)[numThreads-1].moneyPtr = notesPtr->moneyArr;  
 }
 
-static TCC_Money TCC_moneyRangeSum_p_proc(thrd_t* threads, TCC_MoneyNotesStep_p* threadsData, const int numThreads)
+static TCC_Money TCC_moneyRangeSum_p_proc(pthread_t* threads, TCC_MoneyNotesStep_p* threadsData, const int numThreads)
 {
     TCC_Money res = 0;
     for(size_t i = 0; i < numThreads; ++i)
     {
-        thrd_create(&threads[i], TCC_moneyRangeSum_p_step, (void*) &threadsData[i]);
+        pthread_create(&threads[i], NULL, (void *(*)(void *))TCC_moneyRangeSum_p_step, (void*) &threadsData[i]);
     }
     for(size_t i = 0; i < numThreads; ++i)
     {
-        thrd_join(threads[i], NULL);
+        pthread_join(threads[i], NULL);
     }
     for(size_t i = 0; i < numThreads; ++i)
     {
@@ -145,7 +147,7 @@ static TCC_Money TCC_moneyRangeSum_p(const TCC_MoneyNotes * notesPtr,
         return TCC_moneyRangeSum_s(notesPtr, startIndex, endIndex);
     } 
     TCC_Money res = 0;
-    thrd_t* threads;
+    pthread_t* threads;
     TCC_MoneyNotesStep_p* threadsData;
     TCC_moneyRangeSum_p_init(notesPtr, startIndex, endIndex, 
         &threads, &threadsData, numThreads);

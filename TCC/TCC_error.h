@@ -1,0 +1,27 @@
+#ifndef TCC__ERROR_H
+#define TCC__ERROR_H
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+typedef enum TCC_Error {
+    TCC_ERROR_OK = 0,
+    TCC_ERROR_MISSING,
+    TCC_ERROR_MEMORY_ALLOCATION,
+    TCC_ERROR_PROFITS_LOSES_LOAD_ERROR,
+    TCC_ERROR_EMPLOYEES_LOAD_ERROR,
+    TCC_ERROR_OWNERSHIP_LOAD_ERROR,
+    TCC_ERROR_IMMOVABLES_LOAD_ERROR,
+    TCC_ERROR_DB_CONNECTION,
+    TCC_ERROR_DB_QUERY
+} TCC_Error;
+
+
+#ifdef __cplusplus
+}
+#endif
+
+
+#endif

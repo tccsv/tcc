@@ -4,7 +4,7 @@
 
 #define array_size 1024
 
-const GLchar* computeshadersource = "#version 430 core\n"
+const GLchar* computeShaderSource = "#version 430 core\n"
 "layout(local_size_x = 256) in;\n"
 "layout(std430, binding = 0) buffer input {\n"
 "float data[];\n"
@@ -22,81 +22,69 @@ GLuint inputbuffer, outputbuffer;
 
 float totalsum = 0.0f;
 
-void initOpenGL(float* data) {
-    // инициализация glew
-    glewInit();
-
-    // создание буфера для входных данных
-    glGenBuffers(1, &inputbuffer);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, inputbuffer);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(float) * array_size, data, GL_STATIC_DRAW);
-
-    // создание буфера для результата
-    glGenBuffers(1, &outputbuffer);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputbuffer);
-    float initialresult = 0.0f;
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(float), &initialresult, GL_STATIC_DRAW);
-
-    // создание и компиляция шейдера
-    computeshader = glCreateShader(GL_COMPUTE_SHADER);
-    glShaderSource(computeshader, 1, &computeshadersource, NULL);
-    glCompileShader(computeshader);
-
-    // проверка на ошибки компиляции
+void checkShaderCompile(GLuint shader) {
     GLint success;
-    glGetShaderiv(computeshader, GL_COMPILE_STATUS, &success);
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
     if (!success) {
-        char infolog[512];
-        glGetShaderInfoLog(computeshader, 512, NULL, infolog);
-        //fprintf(stderr, "error::shader::compile_failed\n%s\n", infolog);
-    }
-
-    // создание программы шейдеров
-    shaderprogram = glCreateProgram();
-    glAttachShader(shaderprogram, computeshader);
-    glLinkProgram(shaderprogram);
-
-    // установка буферов в шейдере
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, inputbuffer);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outputbuffer);
-}
-//
-void calculateSum() {
-    // запуск вычислительного шейдера
-    glUseProgram(shaderprogram);
-
-    // количество запусков шейдера (количество элементов / размер группы)
-    glDispatchCompute((array_size + 255) / 256, 1, 1); // округление вверх
-
-    // считывание результата из буфера
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputbuffer);
-    float* resultptr = (float*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
-    if (resultptr) {
-        totalsum = *resultptr; // получение результата
-        glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+        char infoLog[512];
+        glGetShaderInfoLog(shader, 512, NULL, infoLog);
+        //fprintf("ERROR::SHADER::COMPILATION_FAILED\n%s\n", infoLog);
+        exit(EXIT_FAILURE);
     }
 }
 
 int test() {
-    // инициализация массива данных
-    printf("aboba: %d\n", 1);
-    float data[array_size];
-    for (int i = 0; i < array_size; i++) {
-        data[i] = rand() % 100; // заполнение случайными числами
-    }
+    glewInit();
 
-    initOpenGL(data);
+    // Исходные данные
+    float inputData[] = { 1.0f, 2.0f, 3.0f, 4.0f };
+    size_t dataSize = sizeof(inputData);
 
-    //calculateSum();
+    // Создание буферов
+    GLuint inputBuffer, outputBuffer;
+    glGenBuffers(1, &inputBuffer);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, inputBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, dataSize, inputData, GL_STATIC_DRAW);
 
-    //// отображение результата
-    ////printf("total sum: %f\n", totalsum);
+    float resultData = 0.0f;
+    glGenBuffers(1, &outputBuffer);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(float), &resultData, GL_DYNAMIC_DRAW);
 
-    //// освобождение ресурсов
-    //glDeleteProgram(shaderprogram);
-    //glDeleteShader(computeshader);
-    //glDeleteBuffers(1, &inputbuffer);
-    //glDeleteBuffers(1, &outputbuffer);
+    // Создание вычислительного шейдера
+    GLuint computeShader = glCreateShader(GL_COMPUTE_SHADER);
+    glShaderSource(computeShader, 1, &computeShaderSource, NULL);
+    glCompileShader(computeShader);
+    checkShaderCompile(computeShader);
+
+    // Создание программы
+    GLuint program = glCreateProgram();
+    glAttachShader(program, computeShader);
+    glLinkProgram(program);
+
+    // Установка буферов
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, inputBuffer);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outputBuffer);
+
+    // Запуск вычислительного шейдера
+    glUseProgram(program);
+    glDispatchCompute(4, 1, 1); // Запускаем 4 рабочих групп
+
+    // Синхронизация
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+
+    // Получение результата
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputBuffer);
+    float* ptr = (float*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
+
+    printf("Sum: %f\n", *ptr);
+
+    // Освобождение ресурсов
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+    glDeleteProgram(program);
+    glDeleteShader(computeShader);
+    glDeleteBuffers(1, &inputBuffer);
+    glDeleteBuffers(1, &outputBuffer);
 
     return 0;
 }

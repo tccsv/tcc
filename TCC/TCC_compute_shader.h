@@ -7,7 +7,7 @@ extern "C"
 #endif
 
 #include <stdlib.h>
-//#include <stdio.h>
+#include <stdio.h>
 #include <GL/glew.h>
 //#include <GL/glut.h>
 
